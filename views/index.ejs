@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Chat do Lorenzo</h1>
+    <div id="chat"></div>
+    <input
+      type="text"
+      name=""
+      id="msg"
+      placeholder="Digite sua mensagem aqui"
+    /><br />
+    <input
+      type="text"
+      name=""
+      id="username"
+      placeholder="Seu nome de usuário"
+    /><br />
+    <button onclick="enviar()">enviar</button>
+  </body>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    let socket = io();
+
+    window.onload = function start() {
+      socket.emit("connectuser", "usuario conectado");
+    };
+
+    socket.on("connectmsg", (data) => {
+      let chat = document.getElementById("chat");
+      let p = document.createElement("p");
+      p.innerHTML = data;
+
+      chat.append(p);
+    });
+
+    socket.on("resultado", (data) => {
+      let chat = document.getElementById("chat");
+      let p = document.createElement("p");
+      p.innerHTML = data;
+
+      chat.append(p);
+    });
+
+    function enviar() {
+      const msgInput = document.getElementById("msg");
+      const username = document.getElementById("username").value;
+
+      socket.emit("msg", { msg: msgInput.value, username });
+
+      msgInput.value = "";
+    }
+  </script>
+</html>
